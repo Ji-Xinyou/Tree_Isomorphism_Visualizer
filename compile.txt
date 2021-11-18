@@ -1,0 +1,25 @@
+g++ -I/usr/local/include \
+-D_LARGEFILE_SOURCE \
+-D_LARGEFILE64_SOURCE \
+-D_THREAD_SAFE \
+-D_REENTRANT \
+-o 'tree' \
+'main.cpp' \
+'tree_buttons.cpp' \
+'tree.cpp' \
+'Mywindow.cpp' \
+'draw_tree.cpp' \
+'draw_nodes.cpp' \
+./revised-gui/GUI.cpp \
+./revised-gui/Graph.cpp \
+./revised-gui/Simple_window.cpp \
+./revised-gui/Window.cpp \
+/usr/local/lib/libfltk.a \
+-L/usr/local/lib \
+-lfltk_images \
+-lpng \
+-lz \
+-ljpeg \
+-lfltk \
+-lpthread \
+-framework Cocoa
