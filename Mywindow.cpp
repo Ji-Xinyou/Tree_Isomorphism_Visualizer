@@ -74,24 +74,60 @@ void myWindow::buildtree()
 
     this->tree1 = new mytree(filename1);
     this->tree2 = new mytree(filename2);
+
     this->c1 = new Point(200, 200);
     this->c2 = new Point(600, 200);
-    this->td1 = new Tree_Draw(tree1, *c1);
-    this->td2 = new Tree_Draw(tree2, *c2);
 
-    this->attach(*td1);
-    this->attach(*td2);
+    if (!tree1->is_valid()) {
+        fl_font(FL_ITALIC, 20);
+        this->tree1_error = new Graph_lib::Text(*(this->c1), "Tree1 is not a tree!");
+        this->attach(*tree1_error);
+    }
 
-    for (int i = 0; i < td1->lines.size(); ++i)
-        this->attach(*td1->lines[i]);
-    for (int i = 0; i < td2->lines.size(); ++i)
-        this->attach(*td2->lines[i]);
+    if (!tree2->is_valid()) {
+        fl_font(FL_ITALIC, 20);
+        this->tree2_error = new Graph_lib::Text(*(this->c2), "Tree2 is not a tree!");
+        this->attach(*tree2_error);
+    }
+
+    if (tree1->is_valid())
+        this->td1 = new Tree_Draw(tree1, *c1);
+    if (tree2->is_valid())
+        this->td2 = new Tree_Draw(tree2, *c2);
+
+    if (tree1->is_valid())
+        this->attach(*td1);
+    if (tree2->is_valid())
+        this->attach(*td2);
+
+    if (tree1->is_valid()) {
+        for (int i = 0; i < td1->lines.size(); ++i)
+            this->attach(*td1->lines[i]);
+    }
+    if (tree2->is_valid()) {
+        for (int i = 0; i < td2->lines.size(); ++i)
+            this->attach(*td2->lines[i]);
+    }
 
     Fl::redraw();
     Fl::wait();
 
+    if (!tree1->is_valid() || !tree2->is_valid())
+        return;
+
+    // pair tree node is called here
     this->tb = new tree_buttons(tree1, tree2, td1, td2, RADIUS);
     this->radius = tb->radius;
+
+    if (!tree1->is_isomorphism(*tree2)) {
+        fl_font(FL_ITALIC, 50);
+        this->errortext = new Graph_lib::Text(Point(200, 200), "Trees are not isomorphic");
+        this->attach(*errortext);
+
+        Fl::redraw();
+        fl_font(FL_ITALIC, FONTSIZE);
+        return;
+    }
 
     Graph_lib::Button *button;
 

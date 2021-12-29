@@ -49,6 +49,11 @@ protected:
 
     int radius;
 
+    /**
+     * @brief following three functions are called in the constructor
+     *        they initialize three member maps and save the position of button
+     *        in button_pos vec
+     */
     void get_node_map();
     void get_pos_map();
     void generate_button_pos();

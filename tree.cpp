@@ -3,11 +3,43 @@
 #include <fstream>
 #include <stack>
 #include <deque>
+#include <algorithm>
 #include "tree.hpp"
 
 using namespace std;
 
-/* ------------------------- CLASS MEMBER OF mytree ------------------------- */
+template<class T>
+bool in_vec(vector<T> vec, T elem)
+{
+    for (auto &v: vec)
+    {
+        if (v == elem)
+            return true;
+    }
+    return false;
+}
+
+string remove_space(string str)
+{
+    int left = 0, right = str.length() - 1;
+    for (int i = 0; i < right; ++i)
+    {
+        if (str[i] == ' ')
+            ++left;
+        else 
+            break;
+    }
+    for (int i = str.length() - 1; i >= 0; --i)
+    {
+        if (str[i] == ' ')
+            --right;
+        else 
+            break;
+    }
+
+    str = str.substr(left, right - left + 1);
+    return str;
+}
 
 // return a vector of parent and child
 // e.g. A->B ---> vec[0] = "A", vec[1] = "B"
@@ -20,11 +52,17 @@ vector<string> process_string(string str)
     parent = str.substr(0, pos);
     child = str.substr(pos + 2);
 
+    // remove the space at the beginning and the end
+    parent = remove_space(parent);
+    child = remove_space(child);
+
     vec.push_back(parent);
     vec.push_back(child);
 
     return vec;
 }
+
+/* ------------------------- CLASS MEMBER OF mytree ------------------------- */
 
 void mytree::build_map_from_file(string filename)
 {
@@ -49,9 +87,12 @@ void mytree::build_map_from_file(string filename)
             ret = process_string(str);
             parent = ret[0];
             child = ret[1];
-            parent_child_map[parent].push_back(child);
+            // no duplicated child
+            if (!in_vec(parent_child_map[parent], child))
+                parent_child_map[parent].push_back(child);
         }
     }
+
     file.close();
 
     // DEBUG SESSION
@@ -236,6 +277,7 @@ mytree::mytree(string filename)
 {
     this->build_map_from_file(filename);
     this->build_tree_from_map();
+    this->check_validity();
 }
 
 /**
@@ -293,6 +335,33 @@ map<Node *, Node *> mytree::pair_tree_Nodes(mytree t)
     }
 
     return mapping;
+}
+
+void mytree::check_validity() {
+    map<string, vector<string> >::iterator it;
+    map<string, vector<string> > child_parent_map; 
+
+    for (it = parent_child_map.begin(); it != parent_child_map.end(); it++) {
+        // cerr << it->first << " -> " ;
+        for (auto _it = it->second.begin(); _it != it->second.end(); _it++)
+            //cerr << *_it;
+            child_parent_map[*_it].push_back(it->first);
+        // cerr << endl;
+    }
+
+    // for (it = child_parent_map.begin(); it != child_parent_map.end(); it++) {
+    //     cerr << it->first << " -> " ;
+    //     for (auto _it = it->second.begin(); _it != it->second.end(); _it++)
+    //         cerr << *_it;
+    //     cerr << endl;
+    // }
+
+    is_Tree = true;
+
+    for (it = child_parent_map.begin(); it != child_parent_map.end(); it++) {
+        if (it->second.size() > 1)
+            is_Tree = false;
+    }
 }
 
 

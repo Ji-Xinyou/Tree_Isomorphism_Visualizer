@@ -14,7 +14,8 @@ struct Node
 {
 
     string name;
-    Node *parent;
+    // probably has more parents(invalid), used to check validity
+    Node* parent;
     vector<Node *> childs;
 
     Node(string n) : name(n), parent(nullptr){};
@@ -27,6 +28,8 @@ class mytree
 protected:
     Node *root;
 
+    bool is_Tree;
+
     map<string, vector<string> > parent_child_map;
 
 public:
@@ -36,6 +39,8 @@ public:
      * @param filename file to be read
      */
     mytree(string filename);
+
+    void check_validity();
 
     /**
      * @brief 
@@ -109,6 +114,8 @@ public:
      * @return false if not
      */
     bool is_isomorphism(mytree t);
+
+    bool is_valid() { return is_Tree; }
 
     map<Node *, Node *> pair_tree_Nodes(mytree t);
 };

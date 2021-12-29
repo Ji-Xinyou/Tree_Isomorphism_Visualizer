@@ -9,24 +9,40 @@
 
 // using namespace Graph_lib;
 
+/**
+ * @brief class to draw trees
+ * 
+ */
+
 class Tree_Draw : public Graph_lib::Shape
 {
-friend class tree_buttons;
-friend class myWindow;
+    friend class tree_buttons;
+    friend class myWindow;
+
 protected:
-    mytree *tree;
-    Point center_root;
-    double dy;
-    map<Node*, Point> node_pos;
-    vector<Graph_lib::Line*> lines;
+    mytree *tree; // tree to be drawn
 
-    void draw_lines() const;
+    Point center_root; // the center_pos of the root nodes
 
+    double dy; // the pixel gap between two node levels
+
+    map<Node *, Point> node_pos; // mapping of node -> pos
+
+    vector<Graph_lib::Line *> lines; // save the Graph_lib::Line* object,
+                                     // called in mywindow's callback many times
+
+    /**
+     * @brief following two functions are called in the constructor
+     *        initialize_position(): set up the mapping of node -> pos
+     *        initialize_lines():    calculate the lines to be drawn and save in lines
+     */
     void initilize_position();
     void initialize_lines();
 
+    void draw_lines() const;
+
 public:
-    Tree_Draw(mytree *t, Point c, double dy = 60) : tree(t), center_root(c), dy(dy) 
+    Tree_Draw(mytree *t, Point c, double dy = 60) : tree(t), center_root(c), dy(dy)
     {
         initilize_position();
         initialize_lines();
