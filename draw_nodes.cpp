@@ -1,5 +1,9 @@
 #include "draw_nodes.hpp"
 
+/**
+ * @brief nodes are just circles with names
+ * 
+ */
 void Node_Draw::draw_lines() const
 {
     if (color().visibility())

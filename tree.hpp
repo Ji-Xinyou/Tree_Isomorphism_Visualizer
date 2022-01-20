@@ -30,6 +30,10 @@ protected:
 
     bool is_Tree;
 
+    int width_win;
+
+    int height_win;
+
     map<string, vector<string> > parent_child_map;
 
 public:
@@ -37,8 +41,10 @@ public:
      * @brief Construct a new mytree object
      * 
      * @param filename file to be read
+     * @param width_win window's width
+     * @param width_height window's height
      */
-    mytree(string filename);
+    mytree(string filename, int width_win, int height_win);
 
     void check_validity();
 

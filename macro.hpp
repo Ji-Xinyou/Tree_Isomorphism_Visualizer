@@ -1,3 +1,3 @@
 #pragma once
-#define RADIUS      10
-#define FONTSIZE    10
+#define RADIUS      14  
+#define FONTSIZE    12 

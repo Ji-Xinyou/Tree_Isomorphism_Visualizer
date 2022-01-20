@@ -23,7 +23,10 @@ pair<Point, Point> better_line_point(Point c1, Point c2, double radius=RADIUS)
     return make_pair(p1, p2);
 }
 
-
+/**
+ * @brief prepare the position of the tree, and prepare the nodes
+ * 
+ */
 void Tree_Draw::initilize_position()
 {
     bool debug = false;
@@ -51,13 +54,13 @@ void Tree_Draw::initilize_position()
         if (count == 1)
             dx = 0;
         else
-            dx = 200 / (count - 1);
+            dx = (this->tree->width_win / 2 - 100) / (count - 1);
 
         // start from the very left
         draw_point.x -= (count - 1) / 2.0 * dx;
         for (int i = 0; i < count; ++i)
         {
-            // draw the nodes
+            // prepare the nodes
             Node *curNode = q.front();
             q.pop_front();
 
@@ -83,6 +86,11 @@ void Tree_Draw::initilize_position()
     }
 }
 
+/**
+ * @brief prepares the lines between nodes for the tree
+ *        draws nothing
+ * 
+ */
 void Tree_Draw::initialize_lines()
 {
     map<Node*, Point>::const_iterator it;
@@ -106,6 +114,10 @@ void Tree_Draw::initialize_lines()
     }
 }
 
+/**
+ * @brief draw the nodes of the tree
+ * 
+ */
 void Tree_Draw::draw_lines() const
 {
     // for each node in node_pos, we create a Node_Draw

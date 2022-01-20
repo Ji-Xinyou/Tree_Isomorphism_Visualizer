@@ -20,7 +20,9 @@ myWindow::myWindow(Point xy, int w, int h, const string &title) : Window(xy, w, 
                                                                   box_file1(Point(150, 50), 100, 20, "filename1"),
                                                                   box_file2(Point(350, 50), 100, 20, "filename2"),
                                                                   button_build_tree(Point(500, 50), 70, 20, "Build Tree", cb_build_tree),
-                                                                  button_exit(Point(x_max() - 70, 0), 70, 40, "Exit", cb_exit)
+                                                                  button_exit(Point(x_max() - 70, 0), 70, 40, "Exit", cb_exit),
+                                                                  width(w),
+                                                                  height(h)
 // tree1(nullptr), tree2(nullptr),
 // draw_t_1(nullptr), draw_t_2(nullptr)
 {
@@ -50,6 +52,11 @@ bool myWindow::wait_for_button()
     return button_exit_pushed;
 }
 
+/**
+ * @brief the callback function of exit
+ * 
+ * @param pw ptr to window
+ */
 void myWindow::cb_exit(Graph_lib::Address, Graph_lib::Address pw)
 {
     Graph_lib::reference_to<myWindow>(pw).exit();
@@ -61,22 +68,31 @@ void myWindow::exit()
     hide();
 }
 
+/**
+ * @brief the callback func of building the first tree
+ * 
+ * @param pw ptr to window
+ */
 void myWindow::cb_build_tree(Graph_lib::Address, Graph_lib::Address pw)
 {
     Graph_lib::reference_to<myWindow>(pw).buildtree();
 }
 
+/**
+ * @brief core func of the callback func cb_build_tree()
+ * 
+ */
 void myWindow::buildtree()
 {
     std::string filename1, filename2;
     filename1 = box_file1.get_string();
     filename2 = box_file2.get_string();
 
-    this->tree1 = new mytree(filename1);
-    this->tree2 = new mytree(filename2);
+    this->tree1 = new mytree(filename1, width, height);
+    this->tree2 = new mytree(filename2, width, height);
 
-    this->c1 = new Point(200, 200);
-    this->c2 = new Point(600, 200);
+    this->c1 = new Point(this->width / 4.0, 200);
+    this->c2 = new Point((this->width * 3) / 4.0, 200);
 
     if (!tree1->is_valid()) {
         fl_font(FL_ITALIC, 20);
@@ -90,16 +106,19 @@ void myWindow::buildtree()
         this->attach(*tree2_error);
     }
 
+    // if any is valid, create a treedraw object w.r.t it
     if (tree1->is_valid())
         this->td1 = new Tree_Draw(tree1, *c1);
     if (tree2->is_valid())
         this->td2 = new Tree_Draw(tree2, *c2);
 
+    // if any is valid, draw its nodes
     if (tree1->is_valid())
         this->attach(*td1);
     if (tree2->is_valid())
         this->attach(*td2);
 
+    // if any is valid, draw its lines
     if (tree1->is_valid()) {
         for (int i = 0; i < td1->lines.size(); ++i)
             this->attach(*td1->lines[i]);
@@ -109,9 +128,11 @@ void myWindow::buildtree()
             this->attach(*td2->lines[i]);
     }
 
+    // refresh the window
     Fl::redraw();
     Fl::wait();
 
+    // neither is valid, do nothing
     if (!tree1->is_valid() || !tree2->is_valid())
         return;
 
@@ -119,6 +140,7 @@ void myWindow::buildtree()
     this->tb = new tree_buttons(tree1, tree2, td1, td2, RADIUS);
     this->radius = tb->radius;
 
+    // print error message
     if (!tree1->is_isomorphism(*tree2)) {
         fl_font(FL_ITALIC, 50);
         this->errortext = new Graph_lib::Text(Point(200, 200), "Trees are not isomorphic");
@@ -161,11 +183,22 @@ void myWindow::buildtree()
     // delete td2;
 }
 
+/**
+ * @brief 
+ * 
+ * @param widget ptr to the widget it self
+ * @param window ptr to the window
+ */
 void myWindow::cb_highlight(Graph_lib::Address widget, Graph_lib::Address window)
 {
     Graph_lib::reference_to<myWindow>(window).highlight((Fl_Widget *)widget);
 }
 
+/**
+ * @brief high light the two buttons by redraw two whole trees
+ * 
+ * @param button the button pressed
+ */
 void myWindow::highlight(Fl_Widget *button)
 {
     // printf("I am pressed! My loc is (%d, %d)\n",
@@ -174,6 +207,7 @@ void myWindow::highlight(Fl_Widget *button)
     // the coordinate of node
     Point xy(button->x() + this->radius, button->y() + this->radius);
 
+    // copy the mapping
     map<Node *, Node *> node_to_node = tb->node_to_node;
     map<Node *, coordinate> node_to_pos = tb->node_to_pos;
     map<coordinate, Node *> pos_to_node = tb->pos_to_node;

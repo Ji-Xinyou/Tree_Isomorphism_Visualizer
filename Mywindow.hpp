@@ -26,6 +26,9 @@ protected:
     bool button_build_tree_pushed;
     bool button_exit_pushed;
 
+    int width;
+    int height;
+
     /**
      * @brief callbacks of buttons
      * cb_exit       -> close the window

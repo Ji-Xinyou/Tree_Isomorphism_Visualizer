@@ -1,5 +1,14 @@
 #include "tree_buttons.hpp"
 
+/**
+ * @brief Construct a new tree buttons::tree buttons object
+ * 
+ * @param tree1 
+ * @param tree2 
+ * @param td1 treedraw object
+ * @param td2 
+ * @param r radius
+ */
 tree_buttons::tree_buttons(mytree *tree1,
                            mytree *tree2,
                            Tree_Draw *td1,
@@ -15,11 +24,19 @@ tree_buttons::tree_buttons(mytree *tree1,
     generate_button_pos();
 }
 
+/**
+ * @brief get the mapping of nodes
+ * 
+ */
 void tree_buttons::get_node_map()
 {
     this->node_to_node = t1->pair_tree_Nodes(*t2);
 }
 
+/**
+ * @brief get the mapping of positions
+ * 
+ */
 void tree_buttons::get_pos_map()
 {
     map<Node *, Point> pos_1 = td1->node_pos;
@@ -41,6 +58,10 @@ void tree_buttons::get_pos_map()
     }
 }
 
+/**
+ * @brief generate the buttons' positions
+ * 
+ */
 void tree_buttons::generate_button_pos()
 {
     map<Node *, coordinate>::iterator it;

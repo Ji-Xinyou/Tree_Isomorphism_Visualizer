@@ -23,6 +23,7 @@
 #include "revised-gui/GUI.h"
 #include "tree.hpp"
 #include "draw_tree.hpp"
+#include "macro.hpp"
 #include <vector>
 #include <unordered_map>
 
@@ -61,5 +62,5 @@ protected:
 public:
     tree_buttons(mytree *tree1, mytree *tree2,
                  Tree_Draw *td1, Tree_Draw *td2,
-                 int r=10);
+                 int r=RADIUS);
 };

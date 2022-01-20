@@ -273,8 +273,10 @@ bool mytree::is_isomorphism(mytree t)
     return get_encoding().first == t.get_encoding().first;
 }
 
-mytree::mytree(string filename)
+mytree::mytree(string filename, int width_win, int height_win)
 {
+    this->width_win = width_win;
+    this->height_win = height_win; 
     this->build_map_from_file(filename);
     this->build_tree_from_map();
     this->check_validity();
